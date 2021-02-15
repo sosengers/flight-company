@@ -1,0 +1,4 @@
+{
+    "buyFlights":"method=post, template=/flights/buy",
+    "getFlightOffers": "method=get, template=/flights/offers"
+}

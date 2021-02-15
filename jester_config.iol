@@ -18,7 +18,7 @@ type getFlightOffersError:void {
 type getFlightOffersRequest:void
 
 type getFlightOffersResponse:void {
-  .flights[0,*]:void {
+  .flights[1,*]:void {
     .arrival_datetime[1,1]:string
     .cost[1,1]:double
     .departure_airport_code[1,1]:string
@@ -43,4 +43,4 @@ outputPort FlightCompanyInput {
 }
 
 
-embedded { Jolie: "FlightCompany.ol" in FlightCompanyInput }
+embedded { Jolie: "FlightCompany2.ol" in FlightCompanyInput }

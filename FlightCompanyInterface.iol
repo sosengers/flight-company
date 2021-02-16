@@ -18,13 +18,15 @@ type getFlightOffersRequest: void {
 }
 
 type getFlightOffersResponse: void {
-    .flights*: void {
-        .flight_id: string
-        .departure_airport_code: string
-        .arrival_airport_code: string
-        .cost: double
-        .departure_datetime: string
-        .arrival_datetime: string
+    .flights?: void {
+        ._*: void {
+            .flight_id: string
+            .departure_airport_code: string
+            .arrival_airport_code: string
+            .cost: double
+            .departure_datetime: string
+            .arrival_datetime: string
+        }
     }
 }
 

@@ -132,12 +132,12 @@ main {
             for(i = 0, i < #selectResult.row, i++) {
                 currentRow -> selectResult.row[i];
                 with(getFlightOffersResponse) {
-                    .flights[i].flight_id = currentRow.flight_id;
-                    .flights[i].departure_airport_code = currentRow.departure_airport_code;
-                    .flights[i].arrival_airport_code = currentRow.arrival_airport_code;
-                    .flights[i].cost = currentRow.cost;
-                    .flights[i].departure_datetime = currentRow.departure_datetime;
-                    .flights[i].arrival_datetime = currentRow.arrival_datetime
+                    .flights._[i].flight_id = currentRow.flight_id;
+                    .flights._[i].departure_airport_code = currentRow.departure_airport_code;
+                    .flights._[i].arrival_airport_code = currentRow.arrival_airport_code;
+                    .flights._[i].cost = currentRow.cost;
+                    .flights._[i].departure_datetime = currentRow.departure_datetime;
+                    .flights._[i].arrival_datetime = currentRow.arrival_datetime
                 }
             }
         }

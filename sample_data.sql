@@ -8,11 +8,11 @@ INSERT INTO flights (
     sold_tickets, 
     insertion_date
 ) VALUES (
-    1,
-    'ABC',
-    'DEF',
+    'AY923499',
+    'VCE',
+    'MXP',
     56.43,
-    '2021-05-01T18:54',
+    '2021-05-01T00:00',
     '2021-05-01T19:28',
     0,
     CURRENT_DATE
@@ -28,12 +28,12 @@ INSERT INTO flights (
     sold_tickets, 
     insertion_date
 ) VALUES (
-    2,
-    'DEF',
-    'ABC',
+    'AC193489',
+    'MXP',
+    'VCE',
     18.97,
-    '2021-05-31T06:47',
-    '2021-05-01T08:13',
+    '2021-05-10T00:00',
+    '2021-05-10T08:13',
     0,
     CURRENT_DATE
 );

@@ -31,6 +31,7 @@ init {
 
 main {
     [ buyFlights( buyFlightsRequest )( buyFlightsResponse ) {
+        println@Console("Received request to buy a flight")()
         buyFlights@DbConnector(buyFlightsRequest)(buyFlightsResponse)
     }]
 

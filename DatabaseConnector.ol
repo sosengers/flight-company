@@ -76,12 +76,19 @@ init {
 
 main {
     [ buyFlights( buyFlightsRequest )( buyFlightsResponse ) {
-        acquire@SemaphoreUtils( { .name = "buyFlights" } )( acquired )
+        println@Console("[DatabaseConnector] check flight information before sending the ticket")()
+        
+        //acquire@SemaphoreUtils( { .name = "buyFlights" } )( acquired )
+
+        //println@Console("[DatabaseConnector] semaphore acquired")()
+
         scope( update ) {
             install(
                 SQLException => println@Console("[DatabaseConnector] Could not update the flight counter.")()
             );
 
+            println@Console("[DatabaseConnector] quering to get the sold tikcets")()
+            
             query@Database(
                 "SELECT sold_tickets FROM flights WHERE flight_id = :id AND departure_datetime = :date" {
                     .id = buyFlightsRequest.flight_id,
@@ -109,7 +116,7 @@ main {
                 })
             }
         }
-        release@SemaphoreUtils( { .name = "buyFlights" })( released )
+        //release@SemaphoreUtils( { .name = "buyFlights" })( released )
     }]
 
     [ getFlightOffers( getFlightOffersRequest )( getFlightOffersResponse ) {

@@ -1,8 +1,10 @@
-type buyFlightsRequest: void {
-    .flight_requests*: void {
+type FlightRequest: void {
         .flight_id: string
         .date: string
     }
+
+type buyFlightsRequest: void {
+    .flight_requests*: FlightRequest
 }
 
 type buyFlightsResponse: void {

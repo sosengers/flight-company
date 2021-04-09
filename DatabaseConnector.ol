@@ -77,46 +77,37 @@ init {
 main {
     [ buyFlights( buyFlightsRequest )( buyFlightsResponse ) {
         println@Console("[DatabaseConnector] check flight information before sending the ticket")()
-        
-        //acquire@SemaphoreUtils( { .name = "buyFlights" } )( acquired )
-
-        //println@Console("[DatabaseConnector] semaphore acquired")()
 
         scope( update ) {
             install(
-                SQLException => println@Console("[DatabaseConnector] Could not update the flight counter.")()
+                SQLException => println@Console("[DatabaseConnector] Could not update the flight counter." + update.SQLException.stackTrace)()
             );
 
-            println@Console("[DatabaseConnector] quering to get the sold tikcets")()
+            println@Console("[DatabaseConnector] quering to get the sold tickets")()
             
-            query@Database(
-                "SELECT sold_tickets FROM flights WHERE flight_id = :id AND departure_datetime = :date" {
-                    .id = buyFlightsRequest.flight_id,
-                    .date = buyFlightsRequest.departure_datetime
+            for(i = 0, i < #buyFlightsRequest.flight_requests, i++) {
+                getTimestampFromString@Time(buyFlightsRequest.flight_requests[i].date { .format = "yyyy-MM-dd" })(departure_timestamp);
+
+                departure_timestamp_secs = double(departure_timestamp) / 1000;
+
+                current_id = buyFlightsRequest.flight_requests[i].flight_id;
+
+                statements[i] = (
+                    "WITH tempview(sold_tickets) AS (SELECT sold_tickets FROM flights WHERE flight_id = '" + current_id + "' AND departure_datetime = TO_TIMESTAMP(" + departure_timestamp_secs + ")) " +
+                    "UPDATE flights SET sold_tickets = (SELECT sold_tickets FROM tempview) + 1 WHERE flight_id = '" + current_id + "' AND departure_datetime = TO_TIMESTAMP(" + departure_timestamp_secs + ")"
+                );
+                
+                update@Database(statements[i])(updateResult);
+
+                if(updateResult == 1) {
+                    println@Console("[DatabaseConnector] UPDATE result: " + updateResult)()
+                } else {
+                    throw (Fault500, { 
+                        .description = "Flight with flight_id = " + buyFlightsRequest.flight_requests[i].flight_id + " and date = " + buyFlightsRequest.flight_requests[i].date + " was not found."
+                    })
                 }
-            )( selectResult );
-
-            println@Console("[DatabaseConnector] SELECT result's rows (#): " + #selectResult.row)()
-
-            if( #selectResult.row == 1) {
-                tickets = selectResult.row[0] + 1;
-
-                update@Database(
-                    "UPDATE flights SET sold_tickets = :tickets WHERE flight_id = :id AND departure_datetime = :date" {
-                        .id = buyFlightsRequest.flight_id,
-                        .date = buyFlightsRequest.departure_datetime,
-                        .tickets = tickets
-                    }
-                )( updateResult );
-
-                println@Console("[DatabaseConnector] UPDATE result: " + updateResult)()
-            } else {
-                throw (Fault500, { 
-                    .description = "Flight with flight_id = " + buyFlightsRequest.flight_id + " and departure_datetime = " + buyFlightsRequest.departure_datetime + " was not found."
-                })
             }
         }
-        //release@SemaphoreUtils( { .name = "buyFlights" })( released )
     }]
 
     [ getFlightOffers( getFlightOffersRequest )( getFlightOffersResponse ) {
@@ -128,10 +119,7 @@ main {
             getCurrentDateTime@Time( { .format = "yyyy-MM-dd" } )( currentDate )
             println@Console(currentDate)()
             query@Database(
-                "SELECT * FROM flights WHERE insertion_date = '"+ currentDate  +"';"
-//                "SELECT * FROM flights WHERE insertion_date = ':current'" {
-//                    .current = currentDate
-//                }
+                "SELECT * FROM flights WHERE insertion_date = '" + currentDate  + "';"
             )( selectResult );
 
             println@Console("[DatabaseConnector] SELECT result's rows (#): " + #selectResult.row)();

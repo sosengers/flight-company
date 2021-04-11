@@ -10,7 +10,6 @@ COPY FlightCompanyInterface.iol ./
 COPY DatabaseConnector.ol ./
 COPY rest_template.json ./
 
-
 EXPOSE 8080
 
 CMD ["jolier", "FlightCompany.ol", "FlightCompanyInput", "localhost:8080"]

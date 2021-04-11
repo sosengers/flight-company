@@ -66,8 +66,8 @@ init {
             "cost double precision," + // Cost of the flight
             "departure_datetime timestamp with time zone," + // Time of departure of the flight from the departure airport
             "arrival_datetime timestamp with time zone," + // Time of arrival of the flight to the arrival airport
-            "sold_tickets integer," + // Simple counter of how many tickets were sold for this flight for the departure_datetime
-            "insertion_date date," + // When the flight was inserted into the database
+            "sold_tickets integer DEFAULT 0," + // Simple counter of how many tickets were sold for this flight for the departure_datetime
+            "insertion_date date DEFAULT CURRENT_DATE," + // When the flight was inserted into the database
             "PRIMARY KEY (flight_id, departure_datetime)" +
             ")"
         )( createTableResult )

@@ -86,8 +86,8 @@ main {
             println@Console("[DatabaseConnector] quering to get the sold tickets")()
             
             for(i = 0, i < #buyFlightsRequest.flight_requests, i++) {
-                getTimestampFromString@Time(buyFlightsRequest.flight_requests[i].date { .format = "yyyy-MM-dd" })(departure_timestamp);
-
+                getTimestampFromString@Time(buyFlightsRequest.flight_requests[i].date { .format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" })(departure_timestamp);
+                println@Console(departure_timestamp)();
                 departure_timestamp_secs = double(departure_timestamp) / 1000;
 
                 current_id = buyFlightsRequest.flight_requests[i].flight_id;

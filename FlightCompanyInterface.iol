@@ -38,6 +38,12 @@ type getFlightOffersError: void {
 
 interface FlightCompanyInterface {
 RequestResponse:
+    /**!
+    * Allows to buy those flights available in buyFlightsRequest.flight_requests.
+    */
     buyFlights( buyFlightsRequest )( buyFlightsResponse ) throws Fault400( buyFlightsError ) Fault500 ( buyFlightsError ),
+    /**!
+    * Returns the flights that are made available from the current day forward.
+    */
     getFlightOffers( getFlightOffersRequest )( getFlightOffersResponse ) throws Fault400( getFlightOffersError ) Fault500 ( getFlightOffersError )
 }

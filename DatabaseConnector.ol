@@ -15,7 +15,9 @@ inputPort FlightCompanyInput {
 }
 
 init {
-    // Loading environment variables.
+    /*
+    * Loading environment variables.
+    */
     getenv@Runtime( "POSTGRES_USER" )( PG_USER )
     getenv@Runtime( "POSTGRES_PASSWORD" )( PG_PASSWORD )
     getenv@Runtime( "POSTGRES_DB" )( PG_DATABASE )
@@ -25,6 +27,10 @@ init {
         println@Console( "[DatabaseConnector] Not all environment variables are set." )();
         halt@Runtime()()
     }
+
+    /*
+    * Setting up the error handler for the database.
+    */
 
     install(
         InvalidDriver => {
@@ -41,7 +47,9 @@ init {
         }
     )
     
-    // Generating connection data and connecting to the PostegreSQL database
+    /*
+    * Generating connection data and connecting to the PostegreSQL database
+    */
     with ( connectionInfo ) {
         .username = PG_USER;
         .password = PG_PASSWORD;
@@ -52,7 +60,9 @@ init {
     
     connect@Database(connectionInfo)();
 
-    // Creating the table if it does not exist
+    /*
+    * Creating the table if it does not exist
+    */
     scope (createTable) {
         install(
             SQLException => println@Console("[DatabaseConnector] flights table already exists in database " + PG_DATABASE)()
@@ -87,7 +97,6 @@ main {
             
             for(i = 0, i < #buyFlightsRequest.flight_requests, i++) {
                 getTimestampFromString@Time(buyFlightsRequest.flight_requests[i].date { .format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" })(departure_timestamp);
-                println@Console(departure_timestamp)();
                 departure_timestamp_secs = double(departure_timestamp) / 1000;
 
                 current_id = buyFlightsRequest.flight_requests[i].flight_id;
@@ -100,7 +109,7 @@ main {
                 update@Database(statements[i])(updateResult);
 
                 if(updateResult == 1) {
-                    println@Console("[DatabaseConnector] UPDATE result: " + updateResult)()
+                    println@Console("[DatabaseConnector] UPDATE DB result: " + updateResult)()
                 } else {
                     throw (Fault500, { 
                         .description = "Flight with flight_id = " + buyFlightsRequest.flight_requests[i].flight_id + " and date = " + buyFlightsRequest.flight_requests[i].date + " was not found."
